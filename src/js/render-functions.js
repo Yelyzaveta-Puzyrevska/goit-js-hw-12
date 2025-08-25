@@ -2,14 +2,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const galleryEl = document.getElementById('gallery');
-const loaderEl = document.getElementById('loader');
-
-const loadMoreBtn = document.querySelector('.load-more');
-
-let lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
+let lightbox;
 
 export function renderGallery(images, append = false) {
   const markup = images
@@ -22,8 +15,8 @@ export function renderGallery(images, append = false) {
         views,
         comments,
         downloads,
-      }) => `
-    <a href="${largeImageURL}" class="gallery-item">
+      }) =>
+        `<a href="${largeImageURL}" class="gallery-item">
       <div class="photo-card">
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
         <div class="info">
@@ -37,31 +30,20 @@ export function renderGallery(images, append = false) {
     )
     .join('');
 
-  if (append) {
-    gallery.insertAdjacentHTML('beforeend', markup);
-  } else {
-    gallery.innerHTML = markup;
-  }
+  if (append) galleryEl.insertAdjacentHTML('beforeend', markup);
+  else galleryEl.innerHTML = markup;
 
-  lightbox.refresh();
-}
-
-export function clearGallery() {
-  gallery.innerHTML = '';
+  if (!lightbox) {
+    lightbox = new SimpleLightbox('.gallery a', {
+      captionsData: 'alt',
+      captionDelay: 250,
+    });
+  } else lightbox.refresh();
 }
 
 export function showLoader() {
-  document.querySelector('.loader').classList.remove('hidden');
+  document.getElementById('loader').classList.remove('hidden');
 }
-
 export function hideLoader() {
-  document.querySelector('.loader').classList.add('hidden');
-}
-
-export function showLoadMoreBtn() {
-  document.querySelector('.load-more').classList.remove('hidden');
-}
-
-export function hideLoadMoreBtn() {
-  document.querySelector('.load-more').classList.add('hidden');
+  document.getElementById('loader').classList.add('hidden');
 }
